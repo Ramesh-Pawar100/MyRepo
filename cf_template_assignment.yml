@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda function and SQS creation.
+Resources:
+  DataProcessing:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.7
+      Role: arn:aws:iam::775718998281:role/imdblambda-role
+      Handler: data_processing_lambda.lambda_handler
+      Code:
+        S3Bucket: myimdbbucket82
+        S3Key: data_processing_lambda.zip
+        
+  EnrichData:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.7
+      Role: arn:aws:iam::775718998281:role/imdblambdaenrich-role
+      Handler: enrich_data.lambda_handler
+      Code:
+        S3Bucket: myimdbbucket82
+        S3Key: enrich_data.zip 
+        
+  IMDBAPIKEY:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: imdb_key
+      Type: String
+      Value: 17d1853b
+      Description: SSM Param to store API key.
+      
+  CreateEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+     EventSourceArn:
+      Fn::GetAtt:
+       - "MyQueue"
+       - "Arn"
+     FunctionName:
+      Fn::GetAtt:
+       - "EnrichData"
+       - "Arn"
+    
+  MyQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: MyImDBQueue
