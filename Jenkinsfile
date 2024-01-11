@@ -19,6 +19,12 @@ pipeline {
       }
     }
 
+      stage('forth stage') {
+      steps {
+        sleep 10
+      }
+    }
+
     stage('script stage') {
       steps {
         sh '''!#/bin/bash
