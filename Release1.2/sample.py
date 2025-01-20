@@ -1,3 +1,4 @@
+"""This module is used for very basic coding example to check github actions"""
 print("Hello Prague!!")
 for i in range(10):
     print(i)    
