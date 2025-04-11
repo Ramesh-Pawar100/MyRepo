@@ -1,6 +1,7 @@
 name: Pylint
 
-on: [push]
+on:
+  workflow_dispatch:  # Allows manual trigger from the GitHub UI
 
 jobs:
   build:
